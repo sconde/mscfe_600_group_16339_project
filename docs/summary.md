@@ -43,7 +43,7 @@ Part 2 is a user guide for social-media sentiment as an alternative dataset. The
 | Quantitative analysis | Part 1 Q1-Q5, ECH replication, accuracy table, Part 2 EDA discussion |
 | Technical report | Step 3 replication: data, method, results, interpretation, recommendation |
 | Non-technical report | Step 1 and Step 2: financial problem, practical action, portfolio relevance |
-| Writing and formatting | Clean group voice, figures from notebook, MLA Works Cited |
+| Writing and formatting | Clean group voice, generated figures, MLA Works Cited |
 
 ## Final Assembly Notes
 

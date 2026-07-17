@@ -22,7 +22,7 @@
 - [ ] The prose is clean, original, and not copied from the source papers.
 - [ ] Figures have titles, labelled axes, and readable captions.
 - [ ] Works Cited is in MLA style and every listed source is used in the report.
-- [ ] No encoding artifacts remain, such as `â`, `Â`, or broken symbols.
+- [ ] No encoding artifacts or broken symbols remain.
 
 ## Submission Mechanics
 
