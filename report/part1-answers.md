@@ -2,77 +2,197 @@
 
 ## Q1. Data Understanding
 
-Sagaceta-Mejia, Sanchez-Gutierrez, and Fresan-Figueroa study daily market data for three ETFs: ECH, EWZ, and IVV. The raw data consist of the standard end-of-day fields available from Yahoo Finance: Open, High, Low, Close, Adjusted Close, and Volume. These six fields are the base dataset. The larger modeling dataset is created by transforming those fields into technical indicators, so most of the predictors are engineered rather than directly observed.
+Sagaceta-Mejia, Sanchez-Gutierrez, and Fresan-Figueroa study daily market data for three ETFs:
+ECH, EWZ, and IVV. The raw inputs are the standard end-of-day fields from Yahoo Finance - Open,
+High, Low, Close, Adjusted Close, and Volume. Those six fields are the base dataset.
 
-The authors apply a technical-analysis library to compute 210 technical indicators, giving 216 input features after the six raw fields are included. These indicators summarize different aspects of price and volume behavior. Moving averages describe trend and smoothing, RSI and Williams %R describe momentum, Bollinger Band measures describe volatility and location within a price envelope, and volume indicators such as On-Balance Volume describe buying or selling pressure. The paper groups the indicators into categories such as momentum, trend, volatility, volume, overlap, cycles, candles, performance, statistics, and utility indicators (Sagaceta-Mejia et al., sec. 2.3).
+The larger modeling dataset is built by passing those raw fields through a technical-analysis
+library to compute 210 indicators, giving 216 inputs total once the six originals are included.
+These indicators cover different facets of price and volume behavior: moving averages for trend
+and smoothing, RSI and Williams %R for momentum, Bollinger Band measures for volatility and
+position within a price envelope, On-Balance Volume for buying and selling pressure. The paper
+organizes them into categories like momentum, trend, volatility, volume, overlap, cycles, candles,
+performance, statistics, and utility indicators (Sagaceta-Mejia et al., sec. 2.3).
 
-We understand the purpose of these indicators as feature engineering. Daily prices by themselves are noisy and difficult to model directly. Technical indicators compress the raw series into quantities that may be more stable, more interpretable, and more useful for classification. A broad indicator panel also creates a feature-selection problem: the goal is not to assume that every indicator is useful, but to identify the smaller subset that carries the most information about future market direction.
+The purpose of computing all 210 is feature engineering. Raw daily prices are noisy and hard to
+model directly, but transformed versions can stabilize the series and make patterns more legible
+to a classifier. The broader question the paper is then asking is which of these 210 summaries
+actually carry useful information about future direction and which are just adding noise. Computing
+everything first and then selecting is the design choice.
 
 ## Q2. Security Understanding - iShares MSCI Chile ETF (ECH)
 
-ECH is an equity exchange-traded fund issued by BlackRock's iShares platform. It tracks the MSCI Chile IMI 25/50 Index and gives investors exposure to Chilean equities. Because it is a single-country emerging-market ETF, it is more concentrated than a broad U.S. market fund. In the paper's sector table, the largest exposures are Financials, Materials, Utilities, Consumer Staples, and Energy, which is consistent with the structure of the Chilean economy and the importance of mining, power, and banking activity (Sagaceta-Mejia et al., table 1).
+ECH is an equity exchange-traded fund from BlackRock's iShares platform. It tracks the MSCI Chile
+IMI 25/50 Index and gives investors exposure to the Chilean equity market. Being a single-country
+emerging-market fund makes it more concentrated than a broad U.S. market product. In the paper's
+sector table, the largest exposures are Financials, Materials, Utilities, Consumer Staples, and
+Energy, which reflects the structure of the Chilean economy - mining, power, and banking are all
+central to it (Sagaceta-Mejia et al., table 1).
 
-For the paper's 2009-2020 sample, ECH's Open price ranges from 29.30 to 80.25, with a median of 46.48 and a mean of 50.10 (Sagaceta-Mejia et al., table 2). In our notebook replication over 2010-2019, the mean Adjusted Close is 35.30, the median Adjusted Close is 33.96, annualized volatility is 20.8%, cumulative return is -30.1%, and maximum drawdown is -60.2%. These numbers show why ECH is a useful example for this assignment: it has enough volatility and drawdown risk for directional prediction to matter, but it is still a listed ETF with clean daily price and volume data.
+For the paper's 2009-2020 sample, ECH's Open price ranges from 29.30 to 80.25, with a median of
+46.48 and a mean of 50.10 (Sagaceta-Mejia et al., table 2). In our notebook replication over
+2010-2019, the mean Adjusted Close is 35.30, the median is 33.96, annualized volatility is 20.8%,
+cumulative return is -30.1%, and maximum drawdown is -60.2%. The fund lost nearly a third of its
+value over the decade and at its worst was down sixty percent from peak. For our purposes, ECH is
+a reasonable choice for this exercise: it has real volatility and meaningful drawdown risk, which
+makes the directional prediction question actually matter, and unlike thinly-traded names, the
+data are clean.
 
-The paper treats the task as classification rather than regression. Instead of estimating the exact next price, the model predicts the direction of movement. This is a practical choice because trading and risk decisions often begin with the question of whether the asset is more likely to move up or down, while exact price forecasts are highly sensitive to noise. The paper defines its class variable from the change in Open price. Two other reasonable target definitions would be: first, a three-class return threshold where positive, negative, and flat days are separated by a small dead band; second, a k-day-ahead Close-to-Close direction, which would better match a multi-day holding period.
+The paper frames the problem as classification rather than regression - predicting direction
+rather than an exact next price. That is a practical choice, since trading and risk decisions
+often begin with the simpler question of which way an asset is more likely to move. Exact price
+forecasts are sensitive to noise in ways that directional forecasts are somewhat less so. The
+paper defines its class variable from the change in Open price. Two other reasonable target
+definitions would be: first, a three-class return threshold that separates up, flat, and down days
+with a small dead band around zero; second, a k-day-ahead Close-to-Close direction, which would
+align better with a multi-day holding period.
 
 ## Q3. Methodology Understanding
 
-If we reorganize the paper, the first part of Section 2 should be treated as a Data section. That section would include the ETFs analyzed, the daily OHLCV fields, the construction of the technical indicators, the class-label definition, normalization, and cleaning. These steps describe how the data are obtained and prepared before any predictive model is estimated.
+The first part of Section 2 in the paper is really a Data section in disguise. It describes the
+ETFs, the daily OHLCV fields, how the technical indicators are constructed, how the class label
+is defined, and how normalization and cleaning are applied. Those are all data-preparation steps
+and belong in a Data section, not mixed in with the modeling discussion.
 
-The model-related material belongs in a separate Methodology section. That section would describe the feature-selection methods, the neural-network classifier, and the cross-validation design. The feature-selection methods include Low Variance, Chi-squared, LASSO, Extra-Trees, Pearson correlation, Principal Feature Analysis, Mean Absolute Difference, and Dispersion Ratio. The classifier is a multilayer perceptron, and performance is evaluated with 10-fold stratified cross-validation (Sagaceta-Mejia et al., secs. 2.8-2.17).
+The model-related material is separate. That belongs in Methodology: the feature-selection
+methods, the neural-network classifier, and the cross-validation design. The selection methods
+include Low Variance, Chi-squared, LASSO, Extra-Trees, Pearson correlation, Principal Feature
+Analysis, Mean Absolute Difference, and Dispersion Ratio. The classifier is a multilayer
+perceptron, evaluated using 10-fold stratified cross-validation (Sagaceta-Mejia et al.,
+secs. 2.8-2.17).
 
-It is useful to distinguish descriptive-statistical methods from model-based methods. Pearson correlation, Low Variance, Mean Absolute Difference, Dispersion Ratio, and Chi-squared are filter methods: they rank or screen variables using statistical properties of the data. LASSO and Extra-Trees are model-based because feature importance is obtained through an estimated model. Principal Feature Analysis uses the structure of the feature space to reduce redundancy. The MLP is the final predictive model rather than a feature itself.
+It helps to separate the statistical-filter methods from the model-based ones. Pearson
+correlation, Low Variance, Mean Absolute Difference, Dispersion Ratio, and Chi-squared are filter
+methods: they rank or screen variables using statistical properties of the data alone, without
+fitting a predictive model. LASSO and Extra-Trees are model-based because the importance ranking
+comes from an estimated model. Principal Feature Analysis works differently, using the structure
+of the feature space to remove redundancy. The MLP is the final predictive model rather than a
+selection tool.
 
-Our proposed outline for the reorganized Section 3 (Methodology) is therefore:
+A reasonable outline for a reorganized Methodology section would be:
 
-- 3.1 Descriptive-statistical (filter) selectors: Low Variance, Chi-squared, Mean Absolute Difference, Dispersion Ratio, Pearson correlation.
+- 3.1 Descriptive-statistical (filter) selectors: Low Variance, Chi-squared, Mean Absolute
+  Difference, Dispersion Ratio, Pearson correlation.
 - 3.2 Model-based selectors: LASSO, Extra-Trees, Principal Feature Analysis.
-- 3.3 Consensus selection: the Selected(n) sets formed from features that several selectors agree on.
+- 3.3 Consensus selection: the Selected(n) sets formed from features that multiple selectors
+  agree on.
 - 3.4 Predictive model: the multilayer perceptron classifier.
-- 3.5 Validation: 10-fold stratified cross-validation and the accuracy comparison across selected sets.
+- 3.5 Validation: 10-fold stratified cross-validation and accuracy comparison across selected
+  sets.
 
-The word "optimized" in the title does not mean that the authors tune every technical indicator's internal lookback period. It means that they optimize the selection of indicators. The procedure is to compute the full feature set, rank features under several selection methods, retain the most informative quartile from each method, and then define consensus sets based on how many selection methods agree. The model is then evaluated on each consensus set. In our reading, the main methodological idea is that a small set of repeatedly selected indicators can reduce noise and computational cost while preserving accuracy.
+One thing worth clarifying about the title: "optimized" does not mean the authors tune each
+indicator's internal lookback period. It means they optimize the selection of which indicators
+to use at all. The workflow is: compute the full set, rank features under multiple selection
+methods, keep the top portion from each, then form consensus sets based on how many selectors
+agree on a given feature. The model is then evaluated on each consensus set. The central claim
+is that a small group of repeatedly selected indicators reduces noise and computation without
+hurting accuracy.
 
 ## Q4. Feature Understanding
 
-In this project, a feature is one input variable used by the classifier. A raw field such as Open or Volume can be a feature, and an engineered technical indicator such as RSI, Balance of Power, or Bollinger Band Percent can also be a feature. A method is different from a feature: Pearson correlation and LASSO are procedures for selecting features. A model is different again: the MLP is the trained function that maps selected features into a directional prediction.
+A feature is one input variable given to the classifier. Raw fields like Open or Volume can be
+features, and engineered indicators like RSI, Balance of Power, or Bollinger Band Percent are
+also features. A selection method is different from a feature: Pearson correlation and LASSO are
+procedures for choosing which features to keep. A model is different again: the MLP is the
+function that takes selected features and outputs a directional prediction.
 
-The feature categories in the paper reflect common technical-analysis groupings. Momentum features measure recent strength or weakness. Trend and overlap features summarize the direction and smoothness of price movement. Volatility features describe how widely prices move. Volume features measure trading pressure. Candlestick and utility indicators encode more specific market patterns or transformations. These categories matter because they help us interpret what kind of market information the final model is using.
+The feature categories in the paper map onto standard technical-analysis groupings. Momentum
+features measure recent price strength or weakness. Trend and overlap features describe direction
+and smoothness of price movement. Volatility features capture the range of price changes.
+Volume features measure trading pressure. Candlestick and utility indicators encode more specific
+market patterns. These categories matter because they tell us what kind of market information the
+model is actually relying on.
 
-The paper's feature-selection result is important because it shows that more variables do not automatically improve a model. Many indicators are correlated with one another, and some add noise rather than signal. The consensus-selected set, especially Selected(5), gives the model a smaller and cleaner input space. This improves interpretability and reduces computation while maintaining, and in some cases improving, predictive accuracy.
+The feature-selection finding is that more inputs do not automatically produce a better model.
+Many indicators move together, and some add confusion rather than clarity. The consensus-selected
+set - especially Selected(5) - gives the classifier a smaller and cleaner input space. That
+improves interpretability and reduces training cost, and in the paper's results it does not hurt
+accuracy. That combination is the point.
 
 ## Q5. Optimization Understanding
 
-Cross-validation is a way to estimate how well a model generalizes beyond the data used to fit it. Instead of relying on one train-test split, the data are divided into folds. The model is repeatedly trained on most folds and tested on the remaining fold. The scores are then summarized across folds. This reduces dependence on a single split and gives a more stable view of out-of-sample performance.
+Cross-validation estimates how well a model generalizes to data it was not trained on. Rather
+than relying on a single train-test split, the data are divided into folds, the model is trained
+on most of them and tested on the held-out fold, then the split rotates. Scores across all folds
+are summarized. This gives a more stable view of out-of-sample performance than any single split
+would provide.
 
-In k-fold cross-validation, the data are split into k groups. The paper uses 10 folds and a stratified version of the procedure, which helps keep the class balance similar across folds. This matters because a directional classification problem can be misleading if one fold contains a very different proportion of up and down days than another.
+In k-fold cross-validation, the data are divided into k groups. The paper uses 10 folds and a
+stratified version that preserves class balance across folds. That matters here because a
+directional classification problem can produce misleading aggregate accuracy if one fold has a
+very different proportion of up and down days than the rest.
 
-Jaccard distance measures how different two sets are. The paper defines it as the size of the symmetric difference of the two sets divided by the size of their union, which is equivalent to one minus the ratio of the number of shared elements to the number of elements in either set. Its value always lies between 0 and 1: a distance of 0 means the two sets are identical, and a distance of 1 means they share no elements. In the paper, it is used to compare selected-feature sets across ETFs. The reported distances are J(ECH, EWZ) = 0.33, J(ECH, IVV) = 0.64, and J(EWZ, IVV) = 0.53, which show that the two emerging-market funds select more similar indicators to each other than either does to the developed-market benchmark (Sagaceta-Mejia et al., sec. 3). This measure is different from Euclidean distance, which measures the straight-line magnitude between numeric vectors, and from cosine distance, which measures the angle between numeric vectors while ignoring their magnitude. Jaccard distance is the more natural choice here because the objects being compared are sets of selected indicators rather than numeric vectors: it depends only on which indicators overlap, not on any numeric value attached to them.
+Jaccard distance quantifies how different two sets are. The formula is: the size of the symmetric
+difference (elements in one set but not the other) divided by the size of the union (elements in
+either set). That is the same as one minus the overlap fraction. The value sits between 0 and 1,
+where 0 means the sets are identical and 1 means they share nothing. In the paper, Jaccard
+distance is used to compare which indicators were selected for each ETF. The reported values are
+J(ECH, EWZ) = 0.33, J(ECH, IVV) = 0.64, and J(EWZ, IVV) = 0.53 (Sagaceta-Mejia et al.,
+sec. 3). ECH and EWZ, both emerging-market funds, end up selecting more similar indicators than
+either does compared to IVV.
 
-The optimal solution in the paper is not simply the largest feature set or the model with the most inputs. It is the feature set that gives the best trade-off between predictive accuracy and model simplicity. The authors find that Selected(5), which is roughly 5% of the original feature set, performs as well as or better than the full feature panel while using far fewer inputs and less training time (Sagaceta-Mejia et al., secs. 3-4).
+Jaccard is the right distance measure here because we are comparing sets of selected features,
+not numeric vectors. Euclidean distance would require a numeric value attached to each feature,
+and there is no natural one. Cosine distance captures the angle between numeric vectors, which
+also does not apply. Jaccard depends only on which features overlap and which do not, and that is
+the question being asked.
+
+The "optimal" solution in the paper is not the model with the most inputs. The authors find that
+Selected(5), roughly 5% of the original feature panel, performs as well as or better than the
+full 216-feature model using far fewer inputs and less training time (Sagaceta-Mejia et al.,
+secs. 3-4). Fewer features, comparable accuracy. That is the result.
 
 ## Step 1 - Financial Problem
 
-The financial problem is directional prediction for ETFs, especially emerging-market ETFs. Investors often need to decide whether to enter, exit, hedge, or reduce exposure. A model that estimates the direction of the next move can support those decisions, but only if the model is not overwhelmed by noisy and redundant indicators.
+The financial problem is directional prediction for ETFs, with a focus on emerging markets.
+Investors need to decide whether to enter a position, exit, hedge, or reduce exposure. A model
+that estimates the probable direction of the next move can support those decisions, provided it
+is not overwhelmed by redundant or noisy inputs.
 
-Emerging markets make the problem more important and more difficult. ECH and EWZ tend to be more volatile and more exposed to country-specific economic conditions than IVV, which tracks a broad developed-market benchmark. The paper's selected indicators differ across the ETFs, and the Jaccard distances show that the two emerging-market funds are more similar to each other than either is to IVV. For us, the practical implication is that feature selection should be performed by instrument rather than assumed to transfer unchanged from one market to another.
+Emerging markets make the problem harder. ECH and EWZ are more volatile than IVV and more
+sensitive to country-specific economic conditions. The paper's selected indicator sets differ
+across the three ETFs, and the Jaccard distances make this concrete: the two emerging-market
+funds are more similar to each other than either is to the developed-market benchmark. The
+practical implication is direct - do not assume that an indicator set validated on one ETF will
+transfer cleanly to another. Feature selection needs to be done by instrument.
 
 ## Step 2 - Application
 
-The main application is a more efficient technical-indicator model for trading and risk monitoring. The paper shows that the selected indicator set can reach roughly the same or better accuracy than the full 216-feature model, while sharply reducing the size of the neural network and the training burden. This is valuable because a smaller model is easier to maintain, easier to explain, and less likely to learn noise.
+The main application is a leaner, more interpretable technical-indicator model for trading and
+risk monitoring. The paper shows that the selected indicator set reaches roughly the same accuracy
+as the full 216-feature model while sharply reducing the number of inputs. A smaller model is
+easier to maintain, easier to explain to a risk manager, and less likely to be fitting noise in
+the training data.
 
-The most useful indicators vary by ETF, but the paper repeatedly identifies momentum, volatility, volume, and trend-related measures. This supports a practical interpretation: directional ETF prediction should combine several views of market behavior rather than rely on one indicator family. At the same time, the result should not be read as a standalone trading rule. A directional signal should be combined with transaction costs, liquidity, risk limits, and portfolio context before it is used for investment decisions.
+Across ETFs, the repeatedly selected indicators tend to come from momentum, volatility, volume,
+and trend families. That supports a practical interpretation: ETF direction prediction should
+combine several views of market behavior rather than rely on a single indicator type. But none of
+this should be read as a ready-made trading rule. Any directional signal needs to be evaluated
+alongside transaction costs, liquidity, risk limits, and portfolio context before it can inform
+a real investment decision.
 
 ## Step 3 - Replication
 
-Our replication focuses on ECH and uses Pearson correlation as the feature-selection criterion. We do not reproduce the full 216-indicator design from the paper. Instead, we construct a smaller set of 21 technical indicators from daily OHLCV data and test whether the paper's central idea still appears in a simplified setting: a compact group of selected indicators can perform better than a larger, noisier panel.
+Our replication focuses on ECH and uses Pearson correlation as the feature-selection criterion.
+We do not reproduce the full 216-indicator design from the paper. Instead, we build a panel of 21
+technical indicators from daily OHLCV data and test whether the paper's central claim holds in a
+simplified setting: that a compact group of selected indicators performs better than a larger,
+noisier panel.
 
-The notebook uses ECH daily data from 2010-01-01 through 2020-01-01. After indicator warm-up rows are removed, the modeling sample contains 2,487 observations and 21 engineered indicators. The target is next-day Open direction, so the predictors are based on information available before the next Open movement is classified. The share of up days is 49.1%, which means the classes are close to balanced.
+The notebook uses ECH daily data from 2010-01-01 through 2020-01-01. After dropping warm-up rows
+from rolling-window indicators, the modeling sample contains 2,487 observations and 21 engineered
+indicators. The target is next-day Open direction, so the predictors are based on information
+available before the next Open movement is classified. Up days account for 49.1% of the sample,
+close to balanced.
 
-Pearson correlation ranks the indicators by absolute association with the class label. The strongest indicators in our run are Balance of Power, Increasing Close, daily return, Decreasing Close, and the 10-day EMA feature. This does not prove that each variable has causal forecasting power, but it does show which indicators have the strongest linear relationship with the next-day direction in this sample.
+Pearson correlation ranks indicators by absolute association with the class label. The strongest
+in our run are Balance of Power, Increasing Close, daily return, Decreasing Close, and the 10-day
+EMA feature. That ranking does not prove causal forecasting power - it shows which indicators
+have the strongest linear relationship with next-day direction in this sample.
 
-The cross-validation result supports the same broad conclusion as the paper. The best median 10-fold accuracy is obtained with only 2 selected indicators, at 80.12%. Accuracy remains near 79.7% with 4 to 8 indicators, then declines as more indicators are added. The full 21-indicator model reaches 74.70%. In our replication, adding every available indicator does not improve the model; it appears to add redundancy and noise.
+The cross-validation results support the paper's central claim. Best median 10-fold accuracy
+comes from only 2 selected indicators, at 80.12%. Accuracy stays near 79.7% from 4 to 8
+indicators, then drops as more indicators are added. The full 21-indicator model reaches 74.70%.
 
 | Number of selected indicators | Median 10-fold accuracy |
 |---:|---:|
@@ -85,8 +205,38 @@ The cross-validation result supports the same broad conclusion as the paper. The
 | 15 | 76.71% |
 | 21 | 74.70% |
 
-We were careful not to take this high accuracy at face value. Our target is the next-day Open direction, but the next Open is very close to the current Close, so any indicator built from the close-minus-open gap, such as Balance of Power, the Increasing and Decreasing flags, and the daily return, nearly encodes the label instead of forecasting it. To test whether the accuracy reflects real skill, we re-ran the identical pipeline on a cleaner target, the next-day Close-to-Close direction, which cannot be recovered from the current close-minus-open gap. On that target the accuracy falls sharply, from 80.12% to 54.22% for the two-indicator model and to roughly 53% across the small subsets, only a little above the 49.3% base rate of up days. We read this as evidence that most of the headline accuracy comes from the mechanical overnight link between today's close and tomorrow's open, not from genuine predictive power. Importantly, the paper's central claim is unaffected: a small, well-chosen indicator set still matches or beats the full panel. It is the level of accuracy, not the feature-selection conclusion, that must be read with this caveat.
+The 80.12% figure looked good. Too good, honestly. A model predicting tomorrow's open direction
+from today's technical indicators should not clear 80% unless something structural is happening,
+and it turned out something was. Our target is next-day Open direction, but the next Open is very
+close to the current Close in most markets. Any indicator built from the close-minus-open gap -
+Balance of Power, the Increasing and Decreasing close flags, the daily return - is essentially
+approximating the label rather than forecasting it. We ran a robustness check to test this.
 
-The three supporting figures for this section are the ECH adjusted-close price history, the ranked absolute correlations of each indicator with the target, and the accuracy-versus-number-of-indicators curve. Each is produced in the notebook with labelled and scaled axes.
+We re-ran the identical pipeline using next-day Close-to-Close direction as the target. That
+target cannot be approximated from today's close-minus-open gap. On that target, accuracy falls
+from 80.12% to 54.22% for the two-indicator model and stays near 53% across the small subsets -
+barely above the 49.3% base rate of up days. The headline accuracy was almost entirely the
+mechanical overnight link between today's close and tomorrow's open, not real predictive skill.
+Importantly, the paper's central claim is unaffected: a small, well-chosen indicator set still
+matches or beats the full panel. The feature-selection conclusion holds; the level of accuracy
+does not.
 
-Our recommendation is to treat a small, correlation-selected ECH indicator panel as a useful screening tool rather than as a complete trading system, and to judge it on the cleaner Close-to-Close target rather than the optimistic Open-to-Open one. The feature-selection result is stronger than the full-panel model and consistent with the paper's argument, but the directional signal itself is weak once the overnight artifact is removed. It should be evaluated with transaction costs, a time-aware (walk-forward) validation design, and live out-of-sample data before being used in portfolio decisions.
+Two additional methodological limitations are worth stating before treating any of these numbers
+as settled. First, we normalized features using the minimum and maximum of the full dataset before
+splitting into folds. That means the test folds' ranges influence the normalization applied during
+training - a mild look-ahead effect. In a production pipeline, normalization should happen inside
+each fold using only training data. Second, we used StratifiedKFold rather than a time-series-
+aware splitter. With shuffle=False, some training folds include observations that fall after their
+test period, allowing future data to inform models tested on earlier dates. A proper time-series
+setup would use an expanding-window walk-forward design. Both issues compound the open-gap
+artifact: the 80.12% number is optimistic on at least three counts, and we flag all three here.
+
+The three supporting figures are the ECH adjusted-close price history, the ranked absolute
+correlations of each indicator with the target, and the accuracy-versus-number-of-indicators
+curve. Each is produced in the notebook with labelled and scaled axes.
+
+The feature-selection conclusion holds up despite all of this: a small, correlation-selected set
+beats the full panel, which is consistent with the paper's argument. Do not take the 80.12%
+figure at face value. The cleaner target tells the real story, and on that basis the signal is
+weak. If this were a live trading application, we would need transaction costs, a proper
+walk-forward backtest, and genuinely fresh out-of-sample data before relying on any of it.
