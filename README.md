@@ -16,7 +16,7 @@ Fill in emails and contribution flags on page 1 of the WQU Report Template befor
 
 This is a 3-member group, so both parts of the assignment are required.
 
-- **Part 1 - Assessing Models with Alternative Data.** We review Sagaceta-Mejia, Sanchez-Gutierrez, and Fresan-Figueroa (2024), which predicts ETF direction using technical indicators, feature selection, and a neural-network classifier under 10-fold cross-validation. We answer Q1-Q5, discuss the financial problem and application, and replicate a simplified slice of the study on the iShares MSCI Chile ETF (ECH) using Pearson correlation as the feature filter.
+- **Part 1 - Assessing Models with Alternative Data.** We review Sagaceta-Mejia, Sanchez-Gutierrez, and Fresan-Figueroa (2024), which predicts ETF direction using technical indicators, feature selection, and a neural-network classifier under 10-fold cross-validation. We answer Q1-Q5, discuss the financial problem and application, and replicate a simplified slice of the study on the iShares MSCI Chile ETF (ECH) using Pearson correlation as the feature filter. The technical answers are paired with a short **non-technical (investor-facing) summary** so the report covers both the technical and non-technical reporting the rubric asks for.
 - **Part 2 - Evaluating One Type of Alternative Data.** We prepare a practitioner guide on social-media sentiment data, covering sources, data types, quality, ethics, import structure, EDA, and a short literature review.
 
 Note on the fund list: the assignment writes the funds as "ECH, EQZ, or IVV." EQZ appears to be a typo for EWZ, the iShares MSCI Brazil ETF used in the paper. We use ECH, so the typo does not affect the replication.
@@ -34,13 +34,19 @@ group-project/
 |-- report/
 |   |-- part1-answers.md
 |   |-- part2-user-guide.md
+|   |-- non-technical-summary.md
 |   `-- references.md
 |-- notebooks/
 |   `-- GWP1_code.ipynb
 |-- figures/
 |-- data/
+|-- REVIEW.md
 `-- *.pdf
 ```
+
+`report/non-technical-summary.md` is the plain-language investor section. It must be included in
+the assembled report (it is what earns the non-technical half of the reporting rubric).
+`REVIEW.md` is our internal review log and is not part of the submitted report.
 
 ## Current Results to Carry Into the Report
 
@@ -76,7 +82,7 @@ Then execute the notebook in Jupyter. Figures are written to `figures/`.
 
 ## Deliverables
 
-- PDF report built from the WQU Report Template, uploaded separately so Turnitin can run.
+- PDF report built from the WQU Report Template, uploaded separately so Turnitin can run. The report must include Part 1 (Q1-Q5 and Steps 1-3), Part 2 (the user guide), the references, and the non-technical (investor-facing) summary from `report/non-technical-summary.md`.
 - Zip file containing `GWP1_code.ipynb` and a PDF export of the notebook with outputs shown.
 - Page 1 of the report template must include all group member names, emails, and contribution flags.
 

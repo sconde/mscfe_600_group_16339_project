@@ -13,7 +13,7 @@
 
 1. Run `notebooks/GWP1_code.ipynb` in Google Colab.
 2. Confirm outputs match the report values or update the report table if the live data pull changes.
-3. Insert the Part 1 and Part 2 text from `report/` into the WQU report template.
+3. Insert the Part 1 and Part 2 text from `report/` into the WQU report template. Include `report/non-technical-summary.md` as the non-technical investor section (owner: Saurav Pal); it is a separate file and is easy to omit, but it earns the non-technical half of the reporting rubric.
 4. Add the ECH price chart, feature-correlation chart, accuracy-vs-features chart, and sentiment EDA figure.
 5. Check page limits, especially the one-page ECH security description and the approximate five-page Part 2 guide.
 6. Confirm every in-text source appears in `report/references.md`.
