@@ -1,0 +1,25 @@
+timestamp,ticker,text,sentiment_score,label
+2020-06-01,SPY,"SPY looking strong, breakout incoming to the moon!",0.71,Bullish
+2020-06-01,SPY,"Bearish on $SPY, this rally makes no sense, selling",-0.62,Bearish
+2020-06-01,SPY,"Holding my calls, bulls in control today",0.46,Bullish
+2020-06-02,SPY,"Market crashing again, I'm scared, dumping everything",-0.78,Bearish
+2020-06-02,SPY,"Great earnings, $SPY to new highs, very bullish",0.83,Bullish
+2020-06-03,SPY,"This dip is a gift, buying more SPY",0.55,Bullish
+2020-06-03,SPY,"Ugh red day, bears winning, puts printing",-0.57,Bearish
+2020-06-03,SPY,"Neutral here, waiting for a clearer signal",0.00,Neutral
+2020-06-04,SPY,"Massive rally, best day ever for my portfolio",0.82,Bullish
+2020-06-04,SPY,"Overbought, expecting a pullback soon, cautious",-0.35,Bearish
+2020-06-05,SPY,"SPY green again, uptrend intact, loving it",0.76,Bullish
+2020-06-05,SPY,"Fed comments spooked the market, selloff hard",-0.69,Bearish
+2020-06-05,SPY,"Buying the fear, long term bullish on stocks",0.48,Bullish
+2020-06-08,SPY,"Choppy action, no conviction either way",0.00,Neutral
+2020-06-08,SPY,"Breaking resistance, momentum is bullish",0.63,Bullish
+2020-06-09,SPY,"Terrible price action, bearish reversal likely",-0.74,Bearish
+2020-06-09,SPY,"Adding to my position, confident in the trend",0.59,Bullish
+2020-06-10,SPY,"Panic selling everywhere, ugly candles",-0.81,Bearish
+2020-06-10,SPY,"Recovery underway, dip buyers stepping in",0.52,Bullish
+2020-06-11,SPY,"New all time highs, euphoria is real, bullish",0.80,Bullish
+2020-06-11,SPY,"Taking profits, market feels toppy and risky",-0.42,Bearish
+2020-06-12,SPY,"Sideways grind continues, boring session",0.00,Neutral
+2020-06-12,SPY,"Strong close, bulls defended support nicely",0.66,Bullish
+2020-06-12,SPY,"Worried about a correction, hedging my longs",-0.50,Bearish

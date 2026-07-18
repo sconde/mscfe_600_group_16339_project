@@ -1,0 +1,7 @@
+# Local installers and environment artifacts
+Miniconda3-*.sh
+.DS_Store
+
+# Notebook runtime byproducts
+notebooks/ECH.csv
+*.ipynb_checkpoints/
