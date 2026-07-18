@@ -23,11 +23,12 @@ everything first and then selecting is the design choice.
 ## Q2. Security Understanding - iShares MSCI Chile ETF (ECH)
 
 ECH is an equity exchange-traded fund from BlackRock's iShares platform. It tracks the MSCI Chile
-IMI 25/50 Index and gives investors exposure to the Chilean equity market. Being a single-country
-emerging-market fund makes it more concentrated than a broad U.S. market product. In the paper's
-sector table, the largest exposures are Financials, Materials, Utilities, Consumer Staples, and
-Energy, which reflects the structure of the Chilean economy - mining, power, and banking are all
-central to it (Sagaceta-Mejia et al., table 1).
+IMI 25/50 Index and gives investors exposure to the Chilean equity market (BlackRock). Being a
+single-country emerging-market fund makes it more concentrated than a broad U.S. market product.
+In the paper's sector table, the largest exposures are Financials, Materials, Utilities, Consumer
+Staples, and Energy, which reflects the structure of the Chilean economy - mining, power, and
+banking are all important to the ETF story (Sagaceta-Mejia et al., table 1). Those weights should
+be read as the paper-period description, not as a current holdings statement.
 
 For the paper's 2009-2020 sample, ECH's Open price ranges from 29.30 to 80.25, with a median of
 46.48 and a mean of 50.10 (Sagaceta-Mejia et al., table 2). In our notebook replication over
@@ -97,11 +98,12 @@ procedures for choosing which features to keep. A model is different again: the 
 function that takes selected features and outputs a directional prediction.
 
 The feature categories in the paper map onto standard technical-analysis groupings. Momentum
-features measure recent price strength or weakness. Trend and overlap features describe direction
-and smoothness of price movement. Volatility features capture the range of price changes.
-Volume features measure trading pressure. Candlestick and utility indicators encode more specific
-market patterns. These categories matter because they tell us what kind of market information the
-model is actually relying on.
+features measure recent price strength or weakness - essentially asking whether recent moves are
+continuing or reversing. Trend and overlap features describe direction and smoothness. Volatility
+features capture how wide the range of price changes has been. Volume features reflect trading
+pressure: are buyers or sellers driving the move? Candlestick and utility indicators encode more
+specific short-term patterns. These categories matter because they tell us what kind of market
+information the model is actually relying on.
 
 The feature-selection finding is that more inputs do not automatically produce a better model.
 Many indicators move together, and some add confusion rather than clarity. The consensus-selected
@@ -161,8 +163,8 @@ transfer cleanly to another. Feature selection needs to be done by instrument.
 The main application is a leaner, more interpretable technical-indicator model for trading and
 risk monitoring. The paper shows that the selected indicator set reaches roughly the same accuracy
 as the full 216-feature model while sharply reducing the number of inputs. A smaller model is
-easier to maintain, easier to explain to a risk manager, and less likely to be fitting noise in
-the training data.
+easier to maintain and harder to overfit. It is also easier to explain to a risk manager who
+wants to know why the model took a position.
 
 Across ETFs, the repeatedly selected indicators tend to come from momentum, volatility, volume,
 and trend families. That supports a practical interpretation: ETF direction prediction should
@@ -190,8 +192,8 @@ in our run are Balance of Power, Increasing Close, daily return, Decreasing Clos
 EMA feature. That ranking does not prove causal forecasting power - it shows which indicators
 have the strongest linear relationship with next-day direction in this sample.
 
-The cross-validation results support the paper's central claim. Best median 10-fold accuracy
-comes from only 2 selected indicators, at 80.12%. Accuracy stays near 79.7% from 4 to 8
+The first cross-validation run appears to support the paper's central claim. Best median 10-fold
+accuracy comes from only 2 selected indicators, at 80.12%. Accuracy stays near 79.7% from 4 to 8
 indicators, then drops as more indicators are added. The full 21-indicator model reaches 74.70%.
 
 | Number of selected indicators | Median 10-fold accuracy |
@@ -217,12 +219,12 @@ target cannot be approximated from today's close-minus-open gap. On that target,
 from 80.12% to 54.22% for the two-indicator model and stays near 53% across the small subsets -
 barely above the 49.3% base rate of up days. The headline accuracy was almost entirely the
 mechanical overnight link between today's close and tomorrow's open, not real predictive skill.
-Importantly, the paper's central claim is unaffected: a small, well-chosen indicator set still
+The paper's central claim is not touched by this: a small, well-chosen indicator set still
 matches or beats the full panel. The feature-selection conclusion holds; the level of accuracy
 does not.
 
-Two additional methodological limitations are worth stating before treating any of these numbers
-as settled. First, we normalized features using the minimum and maximum of the full dataset before
+Before closing, two more issues need naming. First, we normalized features using the minimum and
+maximum of the full dataset before
 splitting into folds. That means the test folds' ranges influence the normalization applied during
 training - a mild look-ahead effect. In a production pipeline, normalization should happen inside
 each fold using only training data. Second, we used StratifiedKFold rather than a time-series-
@@ -235,8 +237,8 @@ The three supporting figures are the ECH adjusted-close price history, the ranke
 correlations of each indicator with the target, and the accuracy-versus-number-of-indicators
 curve. Each is produced in the notebook with labelled and scaled axes.
 
-The feature-selection conclusion holds up despite all of this: a small, correlation-selected set
-beats the full panel, which is consistent with the paper's argument. Do not take the 80.12%
-figure at face value. The cleaner target tells the real story, and on that basis the signal is
-weak. If this were a live trading application, we would need transaction costs, a proper
+The claim about feature selection holds regardless: a small, correlation-selected set
+matches or beats the full panel, which is consistent with the paper's argument. Do not take the
+80.12% figure at face value. The cleaner target tells the real story, and on that basis the signal
+is weak. If this were a live trading application, we would need transaction costs, a proper
 walk-forward backtest, and genuinely fresh out-of-sample data before relying on any of it.

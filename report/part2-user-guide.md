@@ -25,8 +25,7 @@ like RavenPack, Bloomberg, and the StockTwits enterprise feed sell cleaned, enti
 time-stamped sentiment for institutional users, trading lower latency and broader coverage against
 higher cost.
 
-For a course project, and for reproducibility more generally, we prefer a static research dataset
-or cached sample over a live feed. Public research datasets exist for exactly this purpose:
+For a course project, static data beats a live feed. Public research datasets exist for exactly this purpose:
 labeled StockTwits message collections and academic Twitter datasets tied to specific index
 constituents are common starting points. Live platform interfaces change their terms, rate limits,
 and pricing without notice, which makes results hard to reproduce. A cached dataset also lets us
@@ -75,10 +74,10 @@ rate limits, deleted posts, suspended accounts, and changing platform policies m
 dataset we observe can differ systematically from the true population of messages, and that
 difference is rarely random.
 
-Before treating any of this as a signal, we would apply several controls: removing duplicates and
-near-duplicates, filtering posts to the relevant tickers, excluding obvious bots and low-quality
-accounts where possible, aggregating to reduce idiosyncratic noise, and lagging sentiment
-variables to avoid look-ahead bias. None of these controls substitute for out-of-sample testing.
+Before treating any of this as a signal, we would remove duplicates and near-duplicates, filter
+posts to the relevant tickers, and exclude obvious bots and low-quality accounts where possible.
+Aggregating to a daily level reduces idiosyncratic noise, and lagging the sentiment variables
+ensures we do not look ahead into the return window. None of these controls substitute for out-of-sample testing.
 A compelling individual post is not evidence of a signal. A sentiment reading from June 2020 that
 preceded a rally tells you nothing about whether the strategy would have worked in October 2019.
 
@@ -107,7 +106,8 @@ clearly enough that a reader can weigh the signal for themselves.
 In practice, we would load a cached file with one row per post and convert it into a structured
 panel. The key fields are the timestamp, the ticker, the text, and any existing sentiment label.
 If no label exists, we score the text with a sentiment model and then aggregate by ticker and
-date. The code below shows the shape of that workflow; the executable version is in the notebook.
+date. The code below shows the shape of that workflow using the sample file included in the
+project; the notebook uses the same kind of 24-post illustrative sample.
 
 ```python
 import pandas as pd
@@ -145,14 +145,14 @@ That sample is only large enough to show the mechanics; it is far too small to s
 conclusion. We present it as a template, not as evidence. With a real dataset, we would run four
 basic checks before any modeling.
 
-First, plot message volume over time. Spikes in volume often mark earnings announcements, macro
+Start with message volume plotted over time. Spikes often mark earnings announcements, macro
 releases, central-bank comments, or viral narratives, and volume alone is frequently more
-informative than tone. Second, plot the distribution of sentiment scores to see whether the data
-are balanced, skewed, or dominated by neutral posts - a heavily neutral corpus limits how much
-any sentiment signal can contribute. Third, compare bullish, bearish, and neutral counts to gauge
-overall mood and its stability over time. Fourth, align lagged sentiment with next-period returns
-to see whether sentiment leads price or merely reacts to it. That last check is the one that
-decides whether the data have any forecasting value at all.
+informative than tone. Next, look at the distribution of sentiment scores: are they balanced,
+heavily skewed, or dominated by neutrals? A corpus where most posts score near zero limits how
+much any sentiment signal can contribute. Compare bullish, bearish, and neutral counts to gauge
+overall mood and its stability. Finally, align lagged sentiment against next-period returns to
+see whether sentiment leads price or merely reacts to it. That last check is the one that
+actually decides whether the data have any forecasting value.
 
 Our interpretation stays deliberately cautious. Social sentiment tends to be a weak and noisy
 signal, and it is often more useful as a measure of attention, crowding, or disagreement than as
@@ -179,7 +179,7 @@ more than a single positive-or-negative tone; disagreement itself can be a signa
 intraday online investor sentiment and return patterns and documents how sentiment and returns
 interact within the trading day.
 
-None of these papers claims social sentiment is a reliable standalone predictor. The consistent
+None of these papers claims social sentiment is a reliable stand-alone predictor. The consistent
 finding is that the signal is real but conditional - it depends on how you clean the data, how
 you aggregate it, when you measure it relative to the return window, and whether you test it on
 genuinely fresh data. That is the picture we have tried to reflect in this guide.
