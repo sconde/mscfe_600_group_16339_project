@@ -1,9 +1,9 @@
 # GWP1 - Assignment Summary and Rubric Map
 
-**Course:** MScFE 600 Financial Data  
-**Project:** Group Work Project 1, Module 6  
-**Group:** 16339  
-**Members:** Sidafa Conde, Lizzie Luhanga, Saurav Pal  
+**Course:** MScFE 600 Financial Data
+**Project:** Group Work Project 1, Module 6
+**Group:** 16339
+**Members:** Sidafa Conde, Lizzie Luhanga, Saurav Pal
 **Deadline:** July 21, 2026, 8:00 PM EDT
 
 ## Project Scope
@@ -33,8 +33,13 @@ Part 2 is a user guide for social-media sentiment as an alternative dataset. The
 | Annualized volatility | 20.8% |
 | Cumulative return, 2010-2019 | -30.1% |
 | Maximum drawdown | -60.2% |
-| Best median 10-fold accuracy | 80.12% with 2 indicators |
-| Full-set median 10-fold accuracy | 74.70% with 21 indicators |
+| Best Open-to-Open median 10-fold accuracy | 80.12% with 2 indicators |
+| Full-set Open-to-Open median 10-fold accuracy | 74.70% with 21 indicators |
+| Cleaner Close-to-Close robustness result | 54.22% with 2 indicators; near 53% across small subsets |
+
+The high Open-to-Open accuracy is included for comparability with the paper-style target. The
+robustness check is the defensible conclusion: once the target is changed to next-day
+Close-to-Close direction, the signal falls close to the no-skill line.
 
 ## Rubric Map
 

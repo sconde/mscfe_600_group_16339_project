@@ -40,6 +40,8 @@ group-project/
 |   `-- GWP1_code.ipynb
 |-- figures/
 |-- data/
+|   |-- ECH.csv
+|   `-- social_sample.csv
 |-- REVIEW.md
 `-- *.pdf
 ```
@@ -60,8 +62,13 @@ From the executed notebook run:
 | Annualized volatility | 20.8% |
 | Cumulative return, 2010-2019 | -30.1% |
 | Maximum drawdown | -60.2% |
-| Best median 10-fold accuracy | 80.12% with 2 indicators |
-| Full-set median 10-fold accuracy | 74.70% with 21 indicators |
+| Best Open-to-Open median 10-fold accuracy | 80.12% with 2 indicators |
+| Full-set Open-to-Open median 10-fold accuracy | 74.70% with 21 indicators |
+| Cleaner Close-to-Close robustness result | 54.22% with 2 indicators; near 53% across small subsets |
+
+The 80.12% result is reported because it follows the paper-style Open-price target, but it should
+not be treated as live trading skill. The report explains why the Open-to-Open target is optimistic
+and uses the Close-to-Close robustness check as the more honest read on predictive strength.
 
 ## How to Run the Code
 
@@ -86,7 +93,7 @@ Then execute the notebook in Jupyter. Figures are written to `figures/`.
 - Zip file containing `GWP1_code.ipynb` and a PDF export of the notebook with outputs shown.
 - Page 1 of the report template must include all group member names, emails, and contribution flags.
 
-**Submitting member:** _designate one_  
+**Submitting member:** _designate one_
 **Submission deadline:** July 21, 2026, 8:00 PM EDT
 
 ## Reference Documents

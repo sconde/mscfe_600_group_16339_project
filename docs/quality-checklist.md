@@ -4,8 +4,9 @@
 
 - [ ] Q1-Q5 answer all assignment subparts.
 - [ ] Q2 describes ECH asset type, price history, summary statistics, and two alternative target definitions.
-- [ ] Step 3 includes the ECH replication table and the three supporting figures.
+- [ ] Step 3 includes the ECH replication table, the Close-to-Close robustness check, and the three supporting figures.
 - [ ] The report states that the replication is simplified and does not claim to reproduce all 216 indicators.
+- [ ] The report does not let the 80.12% Open-to-Open result stand without the target-artifact caveat.
 - [ ] Part 2 covers all seven required user-guide sections.
 - [ ] The sentiment notebook sample is described as illustrative, not as evidence for a trading rule.
 
@@ -20,6 +21,7 @@
 
 - [ ] The report uses collective group voice: "we," "our replication," "our result."
 - [ ] The prose is clean, original, and not copied from the source papers.
+- [ ] Each group member can explain the robustness check, normalization caveat, and time-series leakage caveat without reading from the report.
 - [ ] Figures have titles, labelled axes, and readable captions.
 - [ ] Works Cited is in MLA style and every listed source is used in the report.
 - [ ] No encoding artifacts or broken symbols remain.

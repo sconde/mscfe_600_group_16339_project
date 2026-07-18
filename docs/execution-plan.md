@@ -23,4 +23,4 @@
 
 ## Important Limitations to Preserve
 
-The replication is intentionally simplified. It uses 21 engineered indicators rather than the paper's full 216-feature panel. It uses Pearson correlation as the selection filter and next-day Open direction as the target. The Part 2 sentiment sample is illustrative and should not be described as a real trading dataset.
+The replication is intentionally simplified. It uses 21 engineered indicators rather than the paper's full 216-feature panel. It uses Pearson correlation as the selection filter and next-day Open direction as the paper-style target, then reports a cleaner next-day Close-to-Close robustness check. The Part 2 sentiment sample is illustrative and should not be described as a real trading dataset.
