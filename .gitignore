@@ -5,3 +5,4 @@ Miniconda3-*.sh
 # Notebook runtime byproducts
 notebooks/ECH.csv
 *.ipynb_checkpoints/
+REVIEW.md
