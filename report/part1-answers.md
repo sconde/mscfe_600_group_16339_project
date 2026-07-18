@@ -35,9 +35,11 @@ For the paper's 2009-2020 sample, ECH's Open price ranges from 29.30 to 80.25, w
 2010-2019, the mean Adjusted Close is 35.30, the median is 33.96, annualized volatility is 20.8%,
 cumulative return is -30.1%, and maximum drawdown is -60.2%. The fund lost nearly a third of its
 value over the decade and at its worst was down sixty percent from peak. For our purposes, ECH is
-a reasonable choice for this exercise: it has real volatility and meaningful drawdown risk, which
-makes the directional prediction question actually matter, and unlike thinly-traded names, the
-data are clean.
+the most demanding of the three ETFs as a replication target. IVV tracks the S&P 500, a heavily
+researched and relatively efficient market where technical indicators are unlikely to show strong
+associations with next-day direction. EWZ would also work, but ECH has a sharper peak-to-trough
+drawdown and more concentrated single-country structure, which gives the model sharper variation
+to work with. The data are also clean, which matters for a reproducible replication.
 
 The paper frames the problem as classification rather than regression - predicting direction
 rather than an exact next price. That is a practical choice, since trading and risk decisions
@@ -117,7 +119,9 @@ Cross-validation estimates how well a model generalizes to data it was not train
 than relying on a single train-test split, the data are divided into folds, the model is trained
 on most of them and tested on the held-out fold, then the split rotates. Scores across all folds
 are summarized. This gives a more stable view of out-of-sample performance than any single split
-would provide.
+would provide. We report the median fold accuracy rather than the mean because the median is more
+resistant to individual folds that cover an unusual market period - a crisis quarter or a
+sustained rally could skew the mean in either direction and misrepresent the typical result.
 
 In k-fold cross-validation, the data are divided into k groups. The paper uses 10 folds and a
 stratified version that preserves class balance across folds. That matters here because a
@@ -190,7 +194,14 @@ close to balanced.
 Pearson correlation ranks indicators by absolute association with the class label. The strongest
 in our run are Balance of Power, Increasing Close, daily return, Decreasing Close, and the 10-day
 EMA feature. That ranking does not prove causal forecasting power - it shows which indicators
-have the strongest linear relationship with next-day direction in this sample.
+have the strongest linear relationship with next-day direction in this sample. Pearson is an
+acceptable simplified filter here because it is fast, interpretable, and consistent with the
+paper's design. What it misses is any non-linear association: a feature that predicts up
+direction only when its value is either very high or very low - but not in the middle - would
+score near zero in a correlation ranking even if it had real forecasting value. Pearson also
+evaluates each indicator in isolation and cannot detect pairs of features that work together
+while being individually weak. The paper uses eight selection methods precisely because no single filter covers all these
+blind spots.
 
 The first cross-validation run appears to support the paper's central claim. Best median 10-fold
 accuracy comes from only 2 selected indicators, at 80.12%. Accuracy stays near 79.7% from 4 to 8
@@ -224,21 +235,22 @@ matches or beats the full panel. The feature-selection conclusion holds; the lev
 does not.
 
 Before closing, two more issues need naming. First, we normalized features using the minimum and
-maximum of the full dataset before
-splitting into folds. That means the test folds' ranges influence the normalization applied during
+maximum of the full dataset before splitting into folds. That means the test folds' ranges influence the normalization applied during
 training - a mild look-ahead effect. In a production pipeline, normalization should happen inside
 each fold using only training data. Second, we used StratifiedKFold rather than a time-series-
 aware splitter. With shuffle=False, some training folds include observations that fall after their
 test period, allowing future data to inform models tested on earlier dates. A proper time-series
-setup would use an expanding-window walk-forward design. Both issues compound the open-gap
-artifact: the 80.12% number is optimistic on at least three counts, and we flag all three here.
+setup would use an expanding-window walk-forward design: train on the first N days, test on the
+next M, expand the training window by M, and repeat until the series is exhausted. That removes
+future leakage entirely and would almost certainly reduce the reported accuracy further, because
+the model would never see market conditions that fall after its test window during training. Both
+issues compound the open-gap artifact: the 80.12% number is optimistic on at least three counts, and we flag all three here.
 
 The three supporting figures are the ECH adjusted-close price history, the ranked absolute
 correlations of each indicator with the target, and the accuracy-versus-number-of-indicators
 curve. Each is produced in the notebook with labelled and scaled axes.
 
-The claim about feature selection holds regardless: a small, correlation-selected set
-matches or beats the full panel, which is consistent with the paper's argument. Do not take the
-80.12% figure at face value. The cleaner target tells the real story, and on that basis the signal
-is weak. If this were a live trading application, we would need transaction costs, a proper
-walk-forward backtest, and genuinely fresh out-of-sample data before relying on any of it.
+Do not take the 80.12% figure at face value. The cleaner target tells the real story, and on
+that basis the directional signal is weak. For any real application, the next step would be a
+proper walk-forward backtest with transaction costs and genuinely fresh out-of-sample data -
+not a cross-validation result on the same decade of data that built the model.

@@ -10,7 +10,10 @@ Social-media sentiment is text-based behavioral data. It comes from public posts
 and reactions on platforms where investors and consumers talk about markets, companies, and
 economic events. Sun et al. put it in the behavioral alternative-data category because it often
 moves faster than formal information channels do - stocks can start reacting to social chatter
-well before any analyst report or press release appears.
+well before any analyst report or press release appears. It is also one of the few
+alternative-data categories accessible for research without an institutional subscription, which
+made it the practical choice for this project, and because attention and sentiment on social
+platforms connect directly to the short-term direction problem in Part 1.
 
 The most useful finance-specific source is StockTwits, where users tag securities with cashtags
 and frequently label their own posts as bullish or bearish. Those self-reported labels are worth
@@ -101,6 +104,14 @@ measure of market attention, not as evidence of fundamental value. Any report bu
 should disclose its limitations, the possibility of bias, and the specific risk of manipulation
 clearly enough that a reader can weigh the signal for themselves.
 
+Of the three issues, market integrity raises the most serious concern in a finance context.
+Platform permission and privacy matter, but violations are bounded - they affect specific parties
+in specific ways, and the harm is contained. A model that amplifies manufactured sentiment can
+distort prices for all participants in a security, creating systemic harm that extends well
+beyond the researcher who built it. That is why we treat the manipulation risk not as a caveat
+but as a constraint: if a signal cannot be clearly separated from coordinated noise, it should
+not be used.
+
 ## 5. Python Import and Data Structure
 
 In practice, we would load a cached file with one row per post and convert it into a structured
@@ -142,8 +153,11 @@ with return data and tested.
 
 The notebook demonstrates the workflow with a small illustrative sample of 24 SPY-related posts.
 That sample is only large enough to show the mechanics; it is far too small to support any trading
-conclusion. We present it as a template, not as evidence. With a real dataset, we would run four
-basic checks before any modeling.
+conclusion. We present it as a template, not as evidence. Twenty-four posts across a handful of days produce
+at most a few daily aggregate data points. Estimating a stable lead/lag relationship between
+sentiment and returns requires hundreds of daily observations at minimum; a corpus this small
+cannot produce a sentiment series with enough statistical reliability to test against returns
+at all. With a real dataset, we would run four basic checks before any modeling.
 
 Start with message volume plotted over time. Spikes often mark earnings announcements, macro
 releases, central-bank comments, or viral narratives, and volume alone is frequently more
