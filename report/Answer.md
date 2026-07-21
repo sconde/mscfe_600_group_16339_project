@@ -241,3 +241,78 @@ Do not take the 80.12% figure at face value. The cleaner target tells the real s
 that basis the directional signal is weak. For any real application, the next step would be a
 proper walk-forward backtest with transaction costs and genuinely fresh out-of-sample data -
 not a cross-validation result on the same decade of data that built the model.
+
+
+## Part 2: Evaluating one particular type of alternative data
+
+## User Guide: Credit Data as Alternative Data in Finance
+## Introduction
+
+Credit data represents a transformative category of alternative data within the commercial data types, providing financial institutions with unprecedented insights into borrower creditworthiness beyond traditional credit bureau reports. As Sun et al. identify, credit data are "obtained from credit bureaus" and are "beneficial for banks or institutions in determining the credit scores of firms and individuals to reduce loan risks" (Sun et al. 7). This user guide provides a comprehensive examination of credit data as alternative data, addressing each of the seven required components for practitioners seeking to incorporate this data type into financial analysis and credit decision-making.
+
+The Financial Innovation review by Sun et al. positions credit data as a distinct subcategory of commercial data, alongside consumption data, enterprise characteristics data, and government data. The review highlights that credit data "optimize the accuracy of the current credit risk assessment system" and can be used to "identify potential misconduct, reducing loan risk" (Sun et al. 7). This guide draws on the framework established by Sun et al. and incorporates recent academic research demonstrating the predictive power of alternative credit data for default prediction and financial inclusion.
+
+## 1. Sources of Data
+
+Credit data as alternative data originates from diverse sources that extend beyond traditional credit bureaus. These sources provide complementary information that enhances traditional credit asessment.
+Credit Bureaus and Traditional Sources: Traditional credit bureaus remain foundational sources, providing historical credit data (HCD) including payment history, credit utilization, length of credit history, credit mix, and new inquiries. However, as Sun et al. note, traditional credit data alone "limits the opportunities for some capable individuals and companies to obtain loans, especially in the case of start-ups" (Sun et al. 7).
+Peer-to-Peer (P2P) Lending Platforms: P2P lending platforms have emerged as significant sources of alternative credit data. Sun et al. reference research using "approximately five million investor-loan-hour data from a Chinese peer-to-peer website" demonstrating that "individuals associated with specific relationships were found to have comparable credit records" (Sun et al. 7). These platforms capture borrower behavior, repayment patterns, and socio network connections that traditional bureaus do not capture.
+
+Digital Footprints and Web Browsing Data: The seminal work by Rozo et al., explicitly referenced in Sun et al. as a key study on credit data, demonstrates the predictive value of web browsing variables. Using a large sample from a major digital retailer, Rozo et al. show that variables including "Number of website visits, Number of account sessions, Number of terms and conditions views and Number of mobile devices used" enhance the predictive accuracy of probability of default models (Rozo et al. 11). These variables are "readily available to the service provider" and can be collected "without specifically seeking this additional information from customers" (Rozo et al. 1).
+Commercial Data Providers: Commercial data providers have emerged to aggregate and standardize alternative credit data. Experian, a major credit bureau, now offers alternative credit data services that incorporate "FCRA-compliant credit data that isn't typically included in traditional credit reports," including "alternative financial services data, rental payment data, full-file public records and account aggregation" (Experian).
+
+## 2. Types of Data
+
+Credit data encompasses multiple types of information that provide complementary perspectives on borrower creditworthiness.
+Traditional Credit Data: Includes payment history (records of on-time and missed payments), credit utilization (ratio of credit used to credit available), length of credit history, credit mix (variety of credit types), and new inquiries (recent credit applications).
+Transactional and Cash Flow Data: Cash flow data accessed through "permissioned bank APIs and payroll verification provide the strongest combination of predictive accuracy and regulatory defensibility" ("AI Credit Scoring" 1). Key variables include average monthly income and income volatility, recurring payment consistency across rent and utilities, overdraft frequency and time-to-recovery patterns, balance trajectory over 6-12 months, and discretionary spending ratios.
+Web Browsing and Digital Behavior Data: Rozo et al. identify specific web browsing variables that enhance credit risk prediction: number of website visits (frequency of customer interaction with the online platform), number of account sessions (session-based engagement metrics), number of terms and conditions views (attention to compliance information), and number of mobile devices used (device diversity as a behavioral signal) (Rozo et al. 11).
+Behavioral and Psychometric Data: Behavioral data captures borrower characteristics beyond financial metrics, including Economic Transaction Data (online shopping habits, payment histories, purchase patterns), Social Stability Data (geographic stability, employment consistency, social network connections), and Psychometric Data (personality traits, attitudes toward risk, financial literacy) ("The Role of Alternative Data" 1).
+
+## 3. Quality of Data
+
+Ensuring data quality is critical for reliable credit assessment and regulatory compliance.
+Predictive Accuracy and Validation: Credit data quality is evaluated through standard metrics including Area Under the Receiver Operating Characteristics Curve (ROC-AUC), Gini coefficient, and Kolmogorov-Smirnov statistic. Rozo et al. demonstrate that "the inclusion of web browsing variables improves predictive performance over the longer term (a 12 month horizon), but not over a shorter term (a 3 month horizon)" (Rozo et al. 11). Research on micro-enterprise credit assessment shows that "external environmental shocks may reduce the model's precision in detecting potential defaults, the model's overall ranking stability remains intact" ("The Role of Alternative Data" 1). Multi-dimensional alternative data can "mitigate data volatility through feature complementarity, thereby enhancing model robustness" ("The Role of Alternative Data" 2).
+
+Data Representativeness and Bias: Traditional credit data leaves significant gaps. Federal Reserve research cited by LendFoundry indicates that "roughly 32 million American adults are considered 'unscoreable' within traditional credit systems, including nearly 7 million credit-invisible consumers and approximately 25 million individuals with thin credit files" ("AI Credit Scoring" 1). Alternative data sources may suffer from nonrepresentative bias, requiring practitioners to assess whether data reflects the entire borrower population or particular subgroups.
+Measurement Accuracy and Consistency: Alternative data may have "definitional differences, coverage deficiencies, and measurement error compared to survey data" (van Delden and Lewis 12). Practitioners should identify "gold standard" sources—typically census or well-established survey data—to serve as ground truth for validation (van Delden and Lewis 13).
+
+Quality Assurance Methods: Cross-validate indicator data across multiple sources through triangulation. Adjust alternative data against traditional sources using post-stratification, multi-level regression, sample matching, propensity score weighting, or calibration methods (van Delden and Lewis 14). As LendFoundry emphasizes, "AI credit scoring models degrade over time. Economic shifts change the relationship between input signals and default behavior. Responsible deployment requires ongoing performance monitoring and scheduled retraining, not a one-time build" ("AI Credit Scoring" 1).
+
+## 4. Ethical Issues
+
+The use of alternative credit data raises significant ethical considerations that practitioners must address to maintain compliance, fairness, and stakeholder trust.
+
+Privacy and Consent: "Any data sourced via open banking APIs requires clear borrower consent, this is both a legal requirement and a trust requirement" ("AI Credit Scoring" 1). Practitioners must ensure explicit, informed consent for data collection and usage. In developed countries, "variables such as phone usage data cannot be accessed without explicit permission due to data protection regulation laws" (Valdrighi et al. 20783). Data must be sufficiently anonymized to prevent identification of individuals.
+
+Fairness and Discrimination: "Alternative data models can produce discriminatory outcomes even without discriminatory intent. Regular fairness audits, testing for disparate impact across protected classes, are a non-negotiable operational requirement" ("AI Credit Scoring" 1). The comprehensive literature review by Bahadori and Hassanzadeh emphasizes that "fairness and regulatory compliance also remain peripheral, with few studies explicitly integrating credit scoring systems with requirements like GDPR or Basel" (Bahadori and Hassanzadeh 3). "Lenders must issue adverse action notices explaining credit denials in plain language. A model that produces scores without reason codes creates FCRA and ECOA exposure" ("AI Credit Scoring" 1).
+
+Regulatory and Legal Considerations: Alternative credit data in the US must comply with the Fair Credit Reporting Act (FCRA). Practitioners must "ensure the data intake architecture is FCRA-compliant by design" with "the permissioning layer, built into the platform, not treated as an afterthought" ("AI Credit Scoring" 1). Firms must undertake appropriate due diligence including Due Diligence Questionnaires, independent verification of vendor responses, and documentation of compliance steps (FISD Alternative Data Council 2).
+
+Responsible Innovation: "There may be customer resistance to the use and/or collection of, for example, mobile usage data" (Valdrighi et al. 20784). "Psychometric and behavioural features may improve prediction" but are "constrained by self-report bias, limited cultural transferability, and privacy considerations" (Bahadori and Hassanzadeh 4). "Showing how data was collected and metrics extracted fosters feedback, research replicability, and further investigation" (van Delden and Lewis 14).
+
+## 5. Literature Search: Papers Citing Research on Credit Data
+
+Foundational Research: Rozo, Betty Johanna Garzon, Jonathan Crook, and Galina Andreeva. "The Role of Web Browsing in Credit Risk Prediction." Decision Support Systems, vol. 164, 2023, p. 113879.
+
+This seminal paper demonstrates the predictive value of web browsing variables in credit risk assessment. Rozo et al. show that "web browsing variables, that can be easily collected by online retailers without specifically seeking this additional information from customers, can be incorporated into models of credit risk to predict PD at account level" (Rozo et al. 11). The study uses a large sample from a major digital retailer and finds that variables including number of website visits, account sessions, terms and conditions views, and mobile devices used enhance predictive accuracy. Key findings: web browsing variables enhance the predictive accuracy of probability of default models at account level; this predictive improvement holds in the absence of credit bureau data facilitating financial inclusion; and inclusion of web browsing variables improves predictive performance over the longer term (a 12 month horizon), but not over a shorter term (a 3 month horizon) (Rozo et al. 11).
+Recent Extensions and Applications: Bahadori, Saeid, and Alireza Hassanzadeh. "A Comprehensive Literature Review on AI-Based Credit Assessment in Digital Lending: Exploring Models, Transparency, Alternative Data, and Real-Time Learning." Expert Systems with Applications, 2026.
+
+This systematic literature review of 118 peer-reviewed articles (2018-2025) traces developments across five domains including alternative data. The review finds that "alternative data sources—including psychometrics and transactional streams—show clear benefits for thin-file borrowers, but issues of bias, privacy, and cultural transferability remain unresolved" (Bahadori and Hassanzadeh 3).
+
+"The Role of Alternative Data in Micro-Enterprises' Credit Risk Assessment in China." Journal of Asian Economics, 2026. This empirical study categorizes alternative data into historical credit data and behavioral data, including economic transaction data and social stability data. Using random forest methodology, the study finds that multi-dimensional alternative data holds significant credit value and that behavioral data-based models demonstrate superior risk identification capability (1-2).
+
+Practical Applications and Implementation: "AI Credit Scoring Using Alternative Data: A Complete Lender's Guide." LendFoundry, 2026. This industry guide notes that "roughly 32 million American adults are considered 'unscoreable' within traditional credit systems" and identifies that "cash flow data accessed through permissioned bank APIs and payroll verification provide the strongest combination of predictive accuracy and regulatory defensibility" (1).
+
+## References
+
+"AI Credit Scoring Using Alternative Data: A Complete Lender's Guide." LendFoundry, 2026.
+Bahadori, Saeid, and Alireza Hassanzadeh. "A Comprehensive Literature Review on AI-Based Credit Assessment in Digital Lending: Exploring Models, Transparency, Alternative Data, and Real-Time Learning." Expert Systems with Applications, 2026.
+Experian. "What is Alternative Data? A Guide for Lenders." Experian Insights, 2026.
+FISD Alternative Data Council. "Alternative Data Identification Factors." Version 1.0, Mar. 2023.
+"The Role of Alternative Data in Micro-Enterprises' Credit Risk Assessment in China." Journal of Asian Economics, 2026.
+Rozo, Betty Johanna Garzon, Jonathan Crook, and Galina Andreeva. "The Role of Web Browsing in Credit Risk Prediction." Decision Support Systems, vol. 164, 2023, p. 113879.
+Sun, Yunchuan, et al. "Alternative Data in Finance and Business: Emerging Applications and Theory Analysis (Review)." Financial Innovation, vol. 10, no. 1, 2024, pp. 1-32.
+Valdrighi, Giovani, et al. "Best Practices for Responsible Machine Learning in Credit Scoring." Neural Computing and Applications, vol. 37, no. 25, 2025, pp. 20781-20821.
+van Delden, Arnout, and David Lewis. "Quality Considerations for Administrative and Commercial Data." The Survey Statistician, no. 85, Jan. 2022, pp. 12-18.
+
