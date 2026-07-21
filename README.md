@@ -6,9 +6,9 @@ WorldQuant University | Financial Data (MScFE 600) | Group Work Project 1 (GWP1)
 
 | Group Member | Email | Actively Contributed |
 |---|---|---|
-| Sidafa Conde | _add email_ | Yes |
-| Lizzie Luhanga | _add email_ | Yes |
-| Saurav Pal | _add email_ | Yes |
+| Sidafa Conde | sconde89@gmail.com | Yes |
+| Lizzie Luhanga | lizzieluhanga44@gmail.com | Yes |
+| Saurav Pal | saurvpal.wor@gmail.com | Yes |
 
 Fill in emails and contribution flags on page 1 of the WQU Report Template before submitting.
 
