@@ -1,211 +1,73 @@
-# Part 2 - User Guide: Social-Media Sentiment Data
+## Part 2: Evaluating one particular type of alternative data
 
-*This guide explains how we would source, structure, assess, and explore social-media sentiment
-as an alternative dataset for finance. We write it as a practical reference: what the data are,
-where they come from, what can go wrong, and how we would begin an analysis responsibly.*
+## User Guide: Credit Data as Alternative Data in Finance
+## Introduction
+
+Credit data represents a transformative category of alternative data within the commercial data types, providing financial institutions with unprecedented insights into borrower creditworthiness beyond traditional credit bureau reports. As Sun et al. identify, credit data are "obtained from credit bureaus" and are "beneficial for banks or institutions in determining the credit scores of firms and individuals to reduce loan risks" (Sun et al. 7). This user guide provides a comprehensive examination of credit data as alternative data, addressing each of the seven required components for practitioners seeking to incorporate this data type into financial analysis and credit decision-making.
+
+The Financial Innovation review by Sun et al. positions credit data as a distinct subcategory of commercial data, alongside consumption data, enterprise characteristics data, and government data. The review highlights that credit data "optimize the accuracy of the current credit risk assessment system" and can be used to "identify potential misconduct, reducing loan risk" (Sun et al. 7). This guide draws on the framework established by Sun et al. and incorporates recent academic research demonstrating the predictive power of alternative credit data for default prediction and financial inclusion.
 
 ## 1. Sources of Data
 
-Social-media sentiment is text-based behavioral data. It comes from public posts, comments, tags,
-and reactions on platforms where investors and consumers talk about markets, companies, and
-economic events. Sun et al. put it in the behavioral alternative-data category because it often
-moves faster than formal information channels do - stocks can start reacting to social chatter
-well before any analyst report or press release appears. It is also one of the few
-alternative-data categories accessible for research without an institutional subscription, which
-made it the practical choice for this project, and because attention and sentiment on social
-platforms connect directly to the short-term direction problem in Part 1.
+Credit data as alternative data originates from diverse sources that extend beyond traditional credit bureaus. These sources provide complementary information that enhances traditional credit asessment.
+Credit Bureaus and Traditional Sources: Traditional credit bureaus remain foundational sources, providing historical credit data (HCD) including payment history, credit utilization, length of credit history, credit mix, and new inquiries. However, as Sun et al. note, traditional credit data alone "limits the opportunities for some capable individuals and companies to obtain loans, especially in the case of start-ups" (Sun et al. 7).
+Peer-to-Peer (P2P) Lending Platforms: P2P lending platforms have emerged as significant sources of alternative credit data. Sun et al. reference research using "approximately five million investor-loan-hour data from a Chinese peer-to-peer website" demonstrating that "individuals associated with specific relationships were found to have comparable credit records" (Sun et al. 7). These platforms capture borrower behavior, repayment patterns, and socio network connections that traditional bureaus do not capture.
 
-The most useful finance-specific source is StockTwits, where users tag securities with cashtags
-and frequently label their own posts as bullish or bearish. Those self-reported labels are worth
-having because they provide a ready-made sentiment target without any additional modeling. X
-(formerly Twitter) is broader and faster, reaching a much larger population, but access has
-become more restricted and expensive, and the finance conversation is heavily mixed with unrelated
-content that needs to be filtered out. Reddit provides longer and more argumentative discussions
-in communities like r/investing, r/stocks, and r/wallstreetbets, which are useful for tracking
-retail narratives and crowding behavior. YouTube comments and transcripts can add context around
-earnings calls, central-bank events, or widely followed market commentary. Commercial vendors
-like RavenPack, Bloomberg, and the StockTwits enterprise feed sell cleaned, entity-tagged, and
-time-stamped sentiment for institutional users, trading lower latency and broader coverage against
-higher cost.
-
-For a course project, static data beats a live feed. Public research datasets exist for exactly this purpose:
-labeled StockTwits message collections and academic Twitter datasets tied to specific index
-constituents are common starting points. Live platform interfaces change their terms, rate limits,
-and pricing without notice, which makes results hard to reproduce. A cached dataset also lets us
-document precisely which messages were analyzed, which matters for grading and audit.
+Digital Footprints and Web Browsing Data: The seminal work by Rozo et al., explicitly referenced in Sun et al. as a key study on credit data, demonstrates the predictive value of web browsing variables. Using a large sample from a major digital retailer, Rozo et al. show that variables including "Number of website visits, Number of account sessions, Number of terms and conditions views and Number of mobile devices used" enhance the predictive accuracy of probability of default models (Rozo et al. 11). These variables are "readily available to the service provider" and can be collected "without specifically seeking this additional information from customers" (Rozo et al. 1).
+Commercial Data Providers: Commercial data providers have emerged to aggregate and standardize alternative credit data. Experian, a major credit bureau, now offers alternative credit data services that incorporate "FCRA-compliant credit data that isn't typically included in traditional credit reports," including "alternative financial services data, rental payment data, full-file public records and account aggregation" (Experian).
 
 ## 2. Types of Data
 
-The raw object is usually unstructured text: a post, reply, headline-style message, or comment.
-This text may include slang, emojis, cashtags, hashtags, links, and informal abbreviations, and
-it is rarely clean enough to use without preprocessing. Emojis and finance slang in particular
-carry real sentiment that standard text pipelines will simply discard, so the cleaning step is
-a genuine modeling decision rather than a mechanical formality.
-
-The structured fields around the text are just as important as the text itself. A useful record
-should include the timestamp (ideally to the second and in a documented time zone), the platform,
-the ticker or topic tag, a post identifier, a user identifier where permitted, and engagement
-measures like likes, replies, reposts, or views. These fields let us align messages with market
-data, weight messages by reach, and separate broad attention from directional sentiment.
-Time-zone handling matters more than it might seem: to avoid look-ahead bias, a message must be
-assigned to the trading interval in which it was actually observable, not the one in which it was
-later archived.
-
-The final modeling variables are almost always derived rather than raw. Common examples include
-daily message volume, average sentiment score, the share of bullish posts, the share of bearish
-posts, the level of disagreement between bullish and bearish users, and lagged versions of each.
-For trading or risk applications, the data are normally collapsed into an hourly or daily panel
-indexed by ticker and time, so the sentiment series can be aligned against returns, volatility,
-and traded volume. That panel form is what makes social data workable alongside the market data
-an analyst already uses.
+Credit data encompasses multiple types of information that provide complementary perspectives on borrower creditworthiness.
+Traditional Credit Data: Includes payment history (records of on-time and missed payments), credit utilization (ratio of credit used to credit available), length of credit history, credit mix (variety of credit types), and new inquiries (recent credit applications).
+Transactional and Cash Flow Data: Cash flow data accessed through "permissioned bank APIs and payroll verification provide the strongest combination of predictive accuracy and regulatory defensibility" ("AI Credit Scoring" 1). Key variables include average monthly income and income volatility, recurring payment consistency across rent and utilities, overdraft frequency and time-to-recovery patterns, balance trajectory over 6-12 months, and discretionary spending ratios.
+Web Browsing and Digital Behavior Data: Rozo et al. identify specific web browsing variables that enhance credit risk prediction: number of website visits (frequency of customer interaction with the online platform), number of account sessions (session-based engagement metrics), number of terms and conditions views (attention to compliance information), and number of mobile devices used (device diversity as a behavioral signal) (Rozo et al. 11).
+Behavioral and Psychometric Data: Behavioral data captures borrower characteristics beyond financial metrics, including Economic Transaction Data (online shopping habits, payment histories, purchase patterns), Social Stability Data (geographic stability, employment consistency, social network connections), and Psychometric Data (personality traits, attitudes toward risk, financial literacy) ("The Role of Alternative Data" 1).
 
 ## 3. Quality of Data
 
-Social-media data are timely and abundant. That does not mean the quality is there. Many posts
-are jokes, repeated slogans, spam, or comments that merely mention a ticker without any real view
-attached. Cashtags can be ambiguous, especially for short symbols that collide with common words
-or other companies. Sentiment models can misread sarcasm, irony, and finance-specific slang: a
-phrase that reads as positive in general English may carry a negative meaning in market context,
-and the reverse is just as common. Because of this, sentiment scores should be validated against
-a sample of human-labeled messages before being used.
+Ensuring data quality is critical for reliable credit assessment and regulatory compliance.
+Predictive Accuracy and Validation: Credit data quality is evaluated through standard metrics including Area Under the Receiver Operating Characteristics Curve (ROC-AUC), Gini coefficient, and Kolmogorov-Smirnov statistic. Rozo et al. demonstrate that "the inclusion of web browsing variables improves predictive performance over the longer term (a 12 month horizon), but not over a shorter term (a 3 month horizon)" (Rozo et al. 11). Research on micro-enterprise credit assessment shows that "external environmental shocks may reduce the model's precision in detecting potential defaults, the model's overall ranking stability remains intact" ("The Role of Alternative Data" 1). Multi-dimensional alternative data can "mitigate data volatility through feature complementarity, thereby enhancing model robustness" ("The Role of Alternative Data" 2).
 
-A more serious issue is manipulation. Bots, coordinated campaigns, and pump-and-dump behavior
-can manufacture both volume and sentiment on demand. This is especially dangerous for small or
-illiquid securities, where a burst of online attention can actually move prices and create a
-feedback loop that a naive model would mistake for genuine signal. Sampling is another concern:
-rate limits, deleted posts, suspended accounts, and changing platform policies mean that the
-dataset we observe can differ systematically from the true population of messages, and that
-difference is rarely random.
+Data Representativeness and Bias: Traditional credit data leaves significant gaps. Federal Reserve research cited by LendFoundry indicates that "roughly 32 million American adults are considered 'unscoreable' within traditional credit systems, including nearly 7 million credit-invisible consumers and approximately 25 million individuals with thin credit files" ("AI Credit Scoring" 1). Alternative data sources may suffer from nonrepresentative bias, requiring practitioners to assess whether data reflects the entire borrower population or particular subgroups.
+Measurement Accuracy and Consistency: Alternative data may have "definitional differences, coverage deficiencies, and measurement error compared to survey data" (van Delden and Lewis 12). Practitioners should identify "gold standard" sources—typically census or well-established survey data—to serve as ground truth for validation (van Delden and Lewis 13).
 
-Before treating any of this as a signal, we would remove duplicates and near-duplicates, filter
-posts to the relevant tickers, and exclude obvious bots and low-quality accounts where possible.
-Aggregating to a daily level reduces idiosyncratic noise, and lagging the sentiment variables
-ensures we do not look ahead into the return window. None of these controls substitute for out-of-sample testing.
-A compelling individual post is not evidence of a signal. A sentiment reading from June 2020 that
-preceded a rally tells you nothing about whether the strategy would have worked in October 2019.
+Quality Assurance Methods: Cross-validate indicator data across multiple sources through triangulation. Adjust alternative data against traditional sources using post-stratification, multi-level regression, sample matching, propensity score weighting, or calibration methods (van Delden and Lewis 14). As LendFoundry emphasizes, "AI credit scoring models degrade over time. Economic shifts change the relationship between input signals and default behavior. Responsible deployment requires ongoing performance monitoring and scheduled retraining, not a one-time build" ("AI Credit Scoring" 1).
 
 ## 4. Ethical Issues
 
-The first ethical issue is platform permission. Each platform's terms of service govern what can
-be collected, stored, and redistributed, and those terms differ and change over time. A project
-that respects them does not scrape data in ways the platform prohibits, even when doing so is
-technically easy.
+The use of alternative credit data raises significant ethical considerations that practitioners must address to maintain compliance, fairness, and stakeholder trust.
 
-The second issue is privacy. Usernames should not be published from research datasets. Building
-profiles of identifiable individuals from public posts is questionable even when it is technically
-legal. Work at the aggregate level wherever possible. If a dataset contains personal identifiers,
-remove or anonymize them - there is rarely a good reason to retain them for a finance application
-- and treat any such data in line with prevailing data-protection standards.
+Privacy and Consent: "Any data sourced via open banking APIs requires clear borrower consent, this is both a legal requirement and a trust requirement" ("AI Credit Scoring" 1). Practitioners must ensure explicit, informed consent for data collection and usage. In developed countries, "variables such as phone usage data cannot be accessed without explicit permission due to data protection regulation laws" (Valdrighi et al. 20783). Data must be sufficiently anonymized to prevent identification of individuals.
 
-The third issue is market integrity. Social-media sentiment reflects manipulation as readily as
-genuine opinion, and a model that amplifies coordinated hype can increase the harm caused by
-misleading campaigns rather than merely observing it. We treat social sentiment as an imperfect
-measure of market attention, not as evidence of fundamental value. Any report built on these data
-should disclose its limitations, the possibility of bias, and the specific risk of manipulation
-clearly enough that a reader can weigh the signal for themselves.
+Fairness and Discrimination: "Alternative data models can produce discriminatory outcomes even without discriminatory intent. Regular fairness audits, testing for disparate impact across protected classes, are a non-negotiable operational requirement" ("AI Credit Scoring" 1). The comprehensive literature review by Bahadori and Hassanzadeh emphasizes that "fairness and regulatory compliance also remain peripheral, with few studies explicitly integrating credit scoring systems with requirements like GDPR or Basel" (Bahadori and Hassanzadeh 3). "Lenders must issue adverse action notices explaining credit denials in plain language. A model that produces scores without reason codes creates FCRA and ECOA exposure" ("AI Credit Scoring" 1).
 
-Of the three issues, market integrity raises the most serious concern in a finance context.
-Platform permission and privacy matter, but violations are bounded - they affect specific parties
-in specific ways, and the harm is contained. A model that amplifies manufactured sentiment can
-distort prices for all participants in a security, creating systemic harm that extends well
-beyond the researcher who built it. That is why we treat the manipulation risk not as a caveat
-but as a constraint: if a signal cannot be clearly separated from coordinated noise, it should
-not be used.
+Regulatory and Legal Considerations: Alternative credit data in the US must comply with the Fair Credit Reporting Act (FCRA). Practitioners must "ensure the data intake architecture is FCRA-compliant by design" with "the permissioning layer, built into the platform, not treated as an afterthought" ("AI Credit Scoring" 1). Firms must undertake appropriate due diligence including Due Diligence Questionnaires, independent verification of vendor responses, and documentation of compliance steps (FISD Alternative Data Council 2).
 
-## 5. Python Import and Data Structure
+Responsible Innovation: "There may be customer resistance to the use and/or collection of, for example, mobile usage data" (Valdrighi et al. 20784). "Psychometric and behavioural features may improve prediction" but are "constrained by self-report bias, limited cultural transferability, and privacy considerations" (Bahadori and Hassanzadeh 4). "Showing how data was collected and metrics extracted fosters feedback, research replicability, and further investigation" (van Delden and Lewis 14).
 
-In practice, we would load a cached file with one row per post and convert it into a structured
-panel. The key fields are the timestamp, the ticker, the text, and any existing sentiment label.
-If no label exists, we score the text with a sentiment model and then aggregate by ticker and
-date. The code below shows the shape of that workflow using the sample file included in the
-project; the notebook uses the same kind of 24-post illustrative sample.
+## 5. Literature Search: Papers Citing Research on Credit Data
 
-```python
-import pandas as pd
-import numpy as np
+Foundational Research: Rozo, Betty Johanna Garzon, Jonathan Crook, and Galina Andreeva. "The Role of Web Browsing in Credit Risk Prediction." Decision Support Systems, vol. 164, 2023, p. 113879.
 
-posts = pd.read_csv("data/social_sample.csv", parse_dates=["timestamp"])
-posts["date"] = posts["timestamp"].dt.date
+This seminal paper demonstrates the predictive value of web browsing variables in credit risk assessment. Rozo et al. show that "web browsing variables, that can be easily collected by online retailers without specifically seeking this additional information from customers, can be incorporated into models of credit risk to predict PD at account level" (Rozo et al. 11). The study uses a large sample from a major digital retailer and finds that variables including number of website visits, account sessions, terms and conditions views, and mobile devices used enhance predictive accuracy. Key findings: web browsing variables enhance the predictive accuracy of probability of default models at account level; this predictive improvement holds in the absence of credit bureau data facilitating financial inclusion; and inclusion of web browsing variables improves predictive performance over the longer term (a 12 month horizon), but not over a shorter term (a 3 month horizon) (Rozo et al. 11).
+Recent Extensions and Applications: Bahadori, Saeid, and Alireza Hassanzadeh. "A Comprehensive Literature Review on AI-Based Credit Assessment in Digital Lending: Exploring Models, Transparency, Alternative Data, and Real-Time Learning." Expert Systems with Applications, 2026.
 
-# Example if sentiment is already supplied:
-daily = (
-    posts.groupby(["ticker", "date"])
-         .agg(
-             message_volume=("text", "size"),
-             mean_sentiment=("sentiment_score", "mean"),
-             bullish_share=("label", lambda s: (s == "Bullish").mean()),
-             bearish_share=("label", lambda s: (s == "Bearish").mean()),
-         )
-         .reset_index()
-)
+This systematic literature review of 118 peer-reviewed articles (2018-2025) traces developments across five domains including alternative data. The review finds that "alternative data sources—including psychometrics and transactional streams—show clear benefits for thin-file borrowers, but issues of bias, privacy, and cultural transferability remain unresolved" (Bahadori and Hassanzadeh 3).
 
-daily["net_bullishness"] = daily["bullish_share"] - daily["bearish_share"]
-```
+"The Role of Alternative Data in Micro-Enterprises' Credit Risk Assessment in China." Journal of Asian Economics, 2026. This empirical study categorizes alternative data into historical credit data and behavioral data, including economic transaction data and social stability data. Using random forest methodology, the study finds that multi-dimensional alternative data holds significant credit value and that behavioral data-based models demonstrate superior risk identification capability (1-2).
 
-If the file has text but no score, a lexicon model like VADER gives a simple and transparent
-first pass, and we use it in the notebook for that reason. For a more serious finance application,
-a finance-tuned language model would typically do better because it handles market language,
-negation, and mixed sentiment more accurately. Whichever scorer we use, the aggregation into a
-ticker-by-date panel is the critical step, because that is the form that can actually be aligned
-with return data and tested.
+Practical Applications and Implementation: "AI Credit Scoring Using Alternative Data: A Complete Lender's Guide." LendFoundry, 2026. This industry guide notes that "roughly 32 million American adults are considered 'unscoreable' within traditional credit systems" and identifies that "cash flow data accessed through permissioned bank APIs and payroll verification provide the strongest combination of predictive accuracy and regulatory defensibility" (1).
 
-## 6. Exploratory Data Analysis
+## References
 
-The notebook demonstrates the workflow with a small illustrative sample of 24 SPY-related posts.
-That sample is only large enough to show the mechanics; it is far too small to support any trading
-conclusion. We present it as a template, not as evidence. Twenty-four posts across a handful of days produce
-at most a few daily aggregate data points. Estimating a stable lead/lag relationship between
-sentiment and returns requires hundreds of daily observations at minimum; a corpus this small
-cannot produce a sentiment series with enough statistical reliability to test against returns
-at all. With a real dataset, we would run four basic checks before any modeling.
+"AI Credit Scoring Using Alternative Data: A Complete Lender's Guide." LendFoundry, 2026.
+Bahadori, Saeid, and Alireza Hassanzadeh. "A Comprehensive Literature Review on AI-Based Credit Assessment in Digital Lending: Exploring Models, Transparency, Alternative Data, and Real-Time Learning." Expert Systems with Applications, 2026.
+Experian. "What is Alternative Data? A Guide for Lenders." Experian Insights, 2026.
+FISD Alternative Data Council. "Alternative Data Identification Factors." Version 1.0, Mar. 2023.
+"The Role of Alternative Data in Micro-Enterprises' Credit Risk Assessment in China." Journal of Asian Economics, 2026.
+Rozo, Betty Johanna Garzon, Jonathan Crook, and Galina Andreeva. "The Role of Web Browsing in Credit Risk Prediction." Decision Support Systems, vol. 164, 2023, p. 113879.
+Sun, Yunchuan, et al. "Alternative Data in Finance and Business: Emerging Applications and Theory Analysis (Review)." Financial Innovation, vol. 10, no. 1, 2024, pp. 1-32.
+Valdrighi, Giovani, et al. "Best Practices for Responsible Machine Learning in Credit Scoring." Neural Computing and Applications, vol. 37, no. 25, 2025, pp. 20781-20821.
+van Delden, Arnout, and David Lewis. "Quality Considerations for Administrative and Commercial Data." The Survey Statistician, no. 85, Jan. 2022, pp. 12-18.
 
-Start with message volume plotted over time. Spikes often mark earnings announcements, macro
-releases, central-bank comments, or viral narratives, and volume alone is frequently more
-informative than tone. Next, look at the distribution of sentiment scores: are they balanced,
-heavily skewed, or dominated by neutrals? A corpus where most posts score near zero limits how
-much any sentiment signal can contribute. Compare bullish, bearish, and neutral counts to gauge
-overall mood and its stability. Finally, align lagged sentiment against next-period returns to
-see whether sentiment leads price or merely reacts to it. That last check is the one that
-actually decides whether the data have any forecasting value.
-
-Our interpretation stays deliberately cautious. Social sentiment tends to be a weak and noisy
-signal, and it is often more useful as a measure of attention, crowding, or disagreement than as
-a direct return forecast. A good exploratory analysis asks whether sentiment adds anything beyond
-what price, volume, and volatility already tell you - not whether bullish posts predict positive
-returns. This is the same principle we applied in Part 1: an attractive-looking signal has to
-survive a fair, out-of-sample test before it means anything.
-
-## 7. Short Literature Search
-
-Sun et al. explain why alternative data can narrow information gaps in finance, while noting that
-these datasets are heterogeneous, noisy, and hard to process. Their review places social-media
-data in the behavioral category and connects it to stock prediction, investment decision-making,
-and the measurement of market attention, which is the use case this guide is built around.
-
-Bollen, Mao, and Zeng provided an early and widely cited demonstration that aggregated
-social-media mood could relate to market movements, and their work helped establish the idea that
-online mood might carry market-relevant information. Their result is worth knowing, though it has
-proved difficult to replicate cleanly out of sample - which is part of why we treat it as
-motivation rather than a firm finding. Hutto and Gilbert introduce VADER, a rule-based sentiment
-model designed for social-media text, and we use it as a transparent baseline in the notebook.
-Cookson and Niessner study investor disagreement on a social network and show that posts reveal
-more than a single positive-or-negative tone; disagreement itself can be a signal. Renault studies
-intraday online investor sentiment and return patterns and documents how sentiment and returns
-interact within the trading day.
-
-None of these papers claims social sentiment is a reliable stand-alone predictor. The consistent
-finding is that the signal is real but conditional - it depends on how you clean the data, how
-you aggregate it, when you measure it relative to the return window, and whether you test it on
-genuinely fresh data. That is the picture we have tried to reflect in this guide.
-
-## Practical Takeaway
-
-The appeal of social-media sentiment data is real: it is faster than most fundamental data
-sources, it captures what retail investors are actually discussing, and a basic version is not
-expensive to build. But cheap does not mean clean. The noise, manipulation, and sampling
-problems are not minor inconveniences - for smaller or more illiquid names, they can swamp the
-signal entirely.
-
-Use this as one additional lens alongside price, volume, volatility, and fundamental context. Do
-not trade on it alone. And before relying on any such signal with real money, require out-of-
-sample evidence from data that was not used to build the model.

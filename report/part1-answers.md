@@ -150,32 +150,19 @@ secs. 3-4). Fewer features, comparable accuracy. That is the result.
 
 ## Step 1 - Financial Problem
 
-The financial problem is directional prediction for ETFs, with a focus on emerging markets.
-Investors need to decide whether to enter a position, exit, hedge, or reduce exposure. A model
-that estimates the probable direction of the next move can support those decisions, provided it
-is not overwhelmed by redundant or noisy inputs.
+The primary financial problem addressed in this study is improving the prediction of short-term stock market movements for exchange-traded funds (ETFs), particularly those representing emerging markets. Investors and portfolio managers continuously face uncertainty when deciding the optimal time to buy, hold, or sell financial assets. Because stock prices are influenced by numerous economic, political, and behavioral factors, accurately forecasting market direction is extremely challenging. Poor investment decisions may lead to significant financial losses, while more reliable predictions can improve portfolio performance and risk management.
 
-Emerging markets make the problem harder. ECH and EWZ are more volatile than IVV and more
-sensitive to country-specific economic conditions. The paper's selected indicator sets differ
-across the three ETFs, and the Jaccard distances make this concrete: the two emerging-market
-funds are more similar to each other than either is to the developed-market benchmark. The
-practical implication is direct - do not assume that an indicator set validated on one ETF will
-transfer cleanly to another. Feature selection needs to be done by instrument.
+The authors attempt to solve this problem by combining technical analysis with machine learning. Instead of relying on all available technical indicators, they first identify the most informative indicators using several feature-selection techniques and then use these selected indicators as inputs to a neural network model. This approach reduces unnecessary information, lowers computational complexity, and improves prediction accuracy.
+
+Predicting stock market movements in emerging markets is considerably more difficult than predicting developed markets. Emerging markets such as Chile (ECH) and Brazil (EWZ) generally experience higher volatility, lower liquidity, greater political uncertainty, and stronger sensitivity to economic events than developed markets like the United States (IVV). These characteristics make market behavior less stable and more difficult to model. The study demonstrates that different ETFs require different combinations of technical indicators, indicating that a model designed for developed markets cannot simply be transferred to emerging markets without adjustment. Therefore, optimizing feature selection for each market is essential for producing more reliable predictions and better investment decisions. This conclusion is supported by the paper's comparison of ECH, EWZ, and IVV and the differences observed in their selected feature sets and Jaccard distances.
 
 ## Step 2 - Application
 
-The main application is a leaner, more interpretable technical-indicator model for trading and
-risk monitoring. The paper shows that the selected indicator set reaches roughly the same accuracy
-as the full 216-feature model while sharply reducing the number of inputs. A smaller model is
-easier to maintain and harder to overfit. It is also easier to explain to a risk manager who
-wants to know why the model took a position.
+The study demonstrates that careful feature selection can improve both the efficiency and effectiveness of stock market prediction models. Rather than using all 216 available technical indicators, the authors found that a small subset of approximately 5% of the indicators achieved prediction accuracy that was equal to or better than the full feature set while substantially reducing computational cost. This makes the model faster to train, easier to interpret, and less likely to suffer from overfitting.
 
-Across ETFs, the repeatedly selected indicators tend to come from momentum, volatility, volume,
-and trend families. That supports a practical interpretation: ETF direction prediction should
-combine several views of market behavior rather than rely on a single indicator type. But none of
-this should be read as a ready-made trading rule. Any directional signal needs to be evaluated
-alongside transaction costs, liquidity, risk limits, and portfolio context before it can inform
-a real investment decision.
+The results have practical applications for investors, portfolio managers, financial analysts, and fintech companies. The model can be used as a decision-support tool to identify probable market direction before making investment decisions. It may assist investors in determining more appropriate entry and exit points, improving portfolio allocation, and managing risk more effectively. However, the model should complement—not replace—fundamental analysis, economic research, and professional judgment.
+
+Several technical indicators consistently proved valuable throughout the study. Among the most useful were Balance of Power (BOP), which measures buying and selling pressure; Bollinger Band Percent (BBP), which identifies price position within volatility bands; Correlation Trend Indicator (CTI), which captures trend strength; Archer's On Balance Volume (AOBV), which reflects volume-based buying and selling activity; Williams %R, KDJ, Even Better SineWave (EBSW), and simple increasing/decreasing price indicators. Most of these indicators belong to the momentum, trend, volatility, and volume categories, suggesting that combining different types of market information produces better predictions than relying on a single indicator alone. The findings highlight that selecting high-quality features is more important than simply increasing the number of features included in the model.
 
 ## Step 3 - Replication
 
